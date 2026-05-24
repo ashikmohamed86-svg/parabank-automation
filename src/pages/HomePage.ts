@@ -8,7 +8,7 @@ import { BasePage } from './BasePage';
  * A failed sign-in also renders its error message on this page.
  */
 export class HomePage extends BasePage {
-  private readonly path = '/index.htm';
+  private readonly path = 'index.htm';
 
   readonly customerLoginHeading: Locator;
   readonly usernameInput: Locator;

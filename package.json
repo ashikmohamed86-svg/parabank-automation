@@ -9,6 +9,8 @@
     "bddgen": "bddgen",
     "test": "bddgen && playwright test",
     "test:headed": "bddgen && playwright test --headed",
+    "test:trace": "bddgen && playwright test --trace on",
+    "test:trace:headed": "bddgen && playwright test --headed --trace on",
     "test:registration": "bddgen && playwright test --grep @registration",
     "test:login": "bddgen && playwright test --grep @login",
     "test:smoke": "bddgen && playwright test --grep @smoke",
@@ -17,8 +19,10 @@
     "test:access": "bddgen && playwright test --grep @access",
     "test:performance": "bddgen && playwright test --grep @performance",
     "report": "playwright show-report",
+    "report:monocart": "open monocart-report/index.html",
+    "report:dashboard": "open monocart-report/dashboard.html",
     "typecheck": "tsc --noEmit",
-    "clean": "rm -rf .features-gen playwright-report test-results blob-report"
+    "clean": "rm -rf .features-gen playwright-report monocart-report test-results blob-report"
   },
   "keywords": [
     "playwright",
@@ -36,6 +40,7 @@
   "devDependencies": {
     "@playwright/test": "^1.60.0",
     "@types/node": "^22.10.0",
+    "monocart-reporter": "^2.11.2",
     "playwright-bdd": "^8.5.1",
     "typescript": "^5.7.0"
   }

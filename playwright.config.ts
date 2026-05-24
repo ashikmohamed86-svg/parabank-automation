@@ -1,11 +1,12 @@
 import { defineConfig, devices } from '@playwright/test';
 import { defineBddConfig } from 'playwright-bdd';
+import monocartConfig from './src/support/monocart-config';
 
 /**
  * Base URL of the application under test.
  * Override with the BASE_URL environment variable if ParaBank is hosted elsewhere.
  */
-const baseURL = process.env.BASE_URL ?? 'https://parabank.parasoft.com/parabank';
+const baseURL = process.env.BASE_URL ?? 'https://parabank.parasoft.com/parabank/';
 
 /**
  * playwright-bdd wiring: Gherkin feature files are compiled into runnable
@@ -19,6 +20,14 @@ const testDir = defineBddConfig({
 
 export default defineConfig({
   testDir,
+  metadata: {
+    'Application under test': 'ParaBank - Parasoft Online Banking Demo',
+    'URL': 'https://parabank.parasoft.com/parabank/',
+    'Owner': 'Ashik Mohamed',
+    'Test framework': 'Playwright + playwright-bdd (Gherkin) + TypeScript',
+    'Browsers': 'Chromium (Desktop Chrome viewport)',
+    'For non-technical readers': 'Open REPORT-SUMMARY.md alongside this report for a 30-second plain-English overview.',
+  },
   // ParaBank is a shared public demo environment - run serially for stable, isolated state.
   fullyParallel: false,
   workers: 1,
@@ -29,14 +38,15 @@ export default defineConfig({
   reporter: [
     ['list'],
     ['html', { outputFolder: 'playwright-report', open: 'never' }],
+    ['monocart-reporter', monocartConfig],
   ],
   use: {
     baseURL,
     actionTimeout: 20_000,
     navigationTimeout: 45_000,
     screenshot: 'on',
-    video: 'retain-on-failure',
-    trace: 'retain-on-failure',
+    video: 'on',
+    trace: 'on',
   },
   projects: [
     {

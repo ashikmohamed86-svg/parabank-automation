@@ -13,10 +13,10 @@ import { BasePage } from './BasePage';
 export class RestrictedAreaPage extends BasePage {
   /** Display name -> path for the ParaBank pages that require authentication. */
   static readonly PROTECTED_PATHS: Record<string, string> = {
-    'Accounts Overview': '/overview.htm',
-    'Transfer Funds': '/transfer.htm',
-    'Update Contact Info': '/updateprofile.htm',
-    'Bill Pay': '/billpay.htm',
+    'Accounts Overview': 'overview.htm',
+    'Transfer Funds': 'transfer.htm',
+    'Update Contact Info': 'updateprofile.htm',
+    'Bill Pay': 'billpay.htm',
   };
 
   readonly errorMessage: Locator;

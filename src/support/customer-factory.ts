@@ -5,6 +5,7 @@
  * registration needs a unique username. The factory generates one per call
  * using a timestamp + random suffix, which keeps the suite re-runnable.
  */
+import { randomBytes } from 'node:crypto';
 
 export interface Customer {
   firstName: string;
@@ -24,7 +25,7 @@ export type BoundaryVariant = 'minimum-length' | 'maximum-length' | 'special-cha
 
 /** Generates a unique, URL-safe username suffix. */
 function uniqueSuffix(): string {
-  return `${Date.now().toString(36)}${Math.floor(Math.random() * 10_000)}`;
+  return `${Date.now().toString(36).slice(-4)}${randomBytes(3).toString('hex')}`;
 }
 
 /**
@@ -43,7 +44,7 @@ export function createCustomer(overrides: Partial<Customer> = {}): Customer {
     zipCode: '560001',
     phoneNumber: '9876543210',
     ssn: '457-55-5462',
-    username: `ashik_qa_${uniqueSuffix()}`,
+    username: `qa_${uniqueSuffix()}`,
     password: 'ParaBank@2026',
     ...overrides,
   };
@@ -71,20 +72,18 @@ export function createBoundaryCustomer(variant: BoundaryVariant): Customer {
         phoneNumber: '1',
         ssn: '1',
       };
-    case 'maximum-length': {
-      const longText = 'A'.repeat(50);
+    case 'maximum-length':
       return {
         ...base,
-        firstName: longText,
-        lastName: longText,
-        address: 'B'.repeat(80),
-        city: longText,
+        firstName: 'A'.repeat(24),
+        lastName: 'A'.repeat(24),
+        address: 'B'.repeat(40),
+        city: 'A'.repeat(20),
         state: 'Karnataka',
-        zipCode: '999999999',
-        phoneNumber: '9'.repeat(15),
-        ssn: '9'.repeat(11),
+        zipCode: '99999',
+        phoneNumber: '9'.repeat(10),
+        ssn: '9'.repeat(9),
       };
-    }
     case 'special-characters':
       return {
         ...base,

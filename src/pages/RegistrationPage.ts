@@ -9,7 +9,7 @@ import type { Customer } from '../support/customer-factory';
  * inline validation error messages for negative scenarios.
  */
 export class RegistrationPage extends BasePage {
-  private readonly path = '/register.htm';
+  private readonly path = 'register.htm';
 
   // --- Form fields (ParaBank uses dotted ids, matched via attribute selectors) ---
   readonly firstNameInput: Locator;

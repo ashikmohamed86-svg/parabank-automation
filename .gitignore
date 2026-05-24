@@ -10,6 +10,13 @@ test-results/
 blob-report/
 playwright/.cache/
 
+# Custom report output
+monocart-report/
+
+# Local tooling / scratch
+.claude/
+.playwright-mcp/
+
 # Logs
 *.log
 npm-debug.log*

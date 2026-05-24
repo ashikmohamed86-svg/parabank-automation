@@ -9,7 +9,7 @@ import { BasePage } from './BasePage';
  * balance is read.
  */
 export class AccountOverviewPage extends BasePage {
-  private readonly path = '/overview.htm';
+  private readonly path = 'overview.htm';
 
   readonly pageHeading: Locator;
   readonly accountsTable: Locator;

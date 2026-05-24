@@ -32,7 +32,7 @@ Then('access to the page is denied', async ({ restrictedAreaPage }) => {
 When('the customer navigates between authenticated pages', async ({ accountOverviewPage, restrictedAreaPage }) => {
   await accountOverviewPage.open();
   await accountOverviewPage.waitUntilLoaded();
-  await restrictedAreaPage.goto('/updateprofile.htm');
+  await restrictedAreaPage.goto('updateprofile.htm');
   await accountOverviewPage.open();
   await accountOverviewPage.waitUntilLoaded();
 });

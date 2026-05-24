@@ -12,6 +12,45 @@ and implemented with the **Page Object Model**.
 
 ---
 
+## For non-technical readers
+
+**What is this?** A robot that opens the ParaBank online banking website,
+performs real customer activities (signing up, logging in, checking the
+balance, trying to break in, etc.), and confirms the website behaves
+correctly. Each "check" the robot performs is called a **test**.
+
+**Why is it useful?** Every time someone changes the code, the robot can
+re-run all checks in a couple of minutes and tell you whether anything
+regressed. This is much faster and more reliable than a human re-clicking
+the same flows by hand.
+
+**Where do I see the results?**
+
+| File | What it is | How to open |
+|------|------------|--------------|
+| `monocart-report/index.html` | The full rich report - charts, every test with screenshots, video, network log, plain-English explanation | Double-click in Finder, or run `pbmono` in the terminal |
+| `monocart-report/REPORT-SUMMARY.md` | A 30-second executive summary in plain English | Open in any text/markdown viewer |
+| `playwright-report/index.html` | The built-in Playwright report (also fine) | `pbreport` |
+
+**Reading a single test in the rich report**
+
+1. Click any test row.
+2. **Steps** tab shows what the robot did, step by step, in English.
+3. **Attachments** tab shows:
+   - `what-this-checks.md` - one-paragraph plain-English explanation of this test
+   - `screenshot`, `video`, `trace` - what the robot saw
+   - `api-calls.md` / `api-calls.json` - every server call the page made
+   - `network.har` - same network data in a format Chrome DevTools can open
+   - `console.log` - any developer messages the page emitted
+
+**What do the colored tags mean?**
+
+The report shows tags like `@smoke` or `@security` on each test. Hover any
+tag in the report for the meaning, or read the full glossary at the top of
+the report's cover page.
+
+---
+
 ## Objective
 
 | Goal | How it is met |
