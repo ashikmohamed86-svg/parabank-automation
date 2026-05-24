@@ -1,0 +1,38 @@
+{
+  "name": "parabank-automation",
+  "version": "1.0.0",
+  "description": "BDD + Page Object Model end-to-end automation for the ParaBank sign-up and login flow, built with Playwright and TypeScript.",
+  "author": "Ashik Mohamed",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "bddgen": "bddgen",
+    "test": "bddgen && playwright test",
+    "test:headed": "bddgen && playwright test --headed",
+    "test:registration": "bddgen && playwright test --grep @registration",
+    "test:login": "bddgen && playwright test --grep @login",
+    "test:smoke": "bddgen && playwright test --grep @smoke",
+    "report": "playwright show-report",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf .features-gen playwright-report test-results blob-report"
+  },
+  "keywords": [
+    "playwright",
+    "playwright-bdd",
+    "cucumber",
+    "gherkin",
+    "page-object-model",
+    "parabank",
+    "test-automation",
+    "typescript"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.60.0",
+    "@types/node": "^22.10.0",
+    "playwright-bdd": "^8.5.1",
+    "typescript": "^5.7.0"
+  }
+}
