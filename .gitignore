@@ -21,6 +21,9 @@ Thumbs.db
 .vscode/
 *.swp
 
+# LibreOffice / Office lock files
+.~lock.*#
+
 # Environment
 .env
 .env.local
