@@ -14,6 +14,8 @@ on every run:
 | Video | `test-results/**` | Recorded and retained for any failing test. |
 | Trace | `test-results/**` | Playwright trace retained on failure (open with `npx playwright show-trace`). |
 | Balance log | `test-results/balance.log` | The post-login account balance, printed and appended here by the suite. |
+| Performance log | `test-results/performance.log` | Measured page-load and action response times against their budgets. |
+| Security log | `test-results/security.log` | Security observations recorded by the security scenarios. |
 
 ## Generating the proof
 
@@ -24,7 +26,8 @@ npm run report      # opens the HTML report in a browser
 
 Then capture a screenshot or screen recording of:
 
-1. The terminal output showing **5 passed** scenarios.
+1. The terminal output showing the **33 scenarios** run (32 passing, plus the
+   `@fail`-tagged XSS scenario reported as an expected failure).
 2. The console line `Post-login balance for "<user>" ... : $<amount>` (also in `test-results/balance.log`).
 3. The Playwright HTML report (`npm run report`).
 
