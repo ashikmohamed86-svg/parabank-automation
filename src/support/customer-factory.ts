@@ -19,6 +19,14 @@ export interface Customer {
   password: string;
 }
 
+/** Boundary-value profiles used by the input-validation scenarios. */
+export type BoundaryVariant = 'minimum-length' | 'maximum-length' | 'special-characters';
+
+/** Generates a unique, URL-safe username suffix. */
+function uniqueSuffix(): string {
+  return `${Date.now().toString(36)}${Math.floor(Math.random() * 10_000)}`;
+}
+
 /**
  * Builds a customer with valid, unique data for ParaBank registration.
  *
@@ -26,8 +34,6 @@ export interface Customer {
  * @returns A fully populated {@link Customer}.
  */
 export function createCustomer(overrides: Partial<Customer> = {}): Customer {
-  const uniqueSuffix = `${Date.now().toString(36)}${Math.floor(Math.random() * 10_000)}`;
-
   return {
     firstName: 'Ashik',
     lastName: 'Mohamed',
@@ -37,8 +43,55 @@ export function createCustomer(overrides: Partial<Customer> = {}): Customer {
     zipCode: '560001',
     phoneNumber: '9876543210',
     ssn: '457-55-5462',
-    username: `ashik_qa_${uniqueSuffix}`,
+    username: `ashik_qa_${uniqueSuffix()}`,
     password: 'ParaBank@2026',
     ...overrides,
   };
+}
+
+/**
+ * Builds a customer whose field values exercise a specific boundary case,
+ * while keeping the username unique so registration still succeeds.
+ *
+ * @param variant - The boundary profile to apply.
+ */
+export function createBoundaryCustomer(variant: BoundaryVariant): Customer {
+  const base = createCustomer();
+
+  switch (variant) {
+    case 'minimum-length':
+      return {
+        ...base,
+        firstName: 'A',
+        lastName: 'M',
+        address: '1',
+        city: 'X',
+        state: 'KA',
+        zipCode: '1',
+        phoneNumber: '1',
+        ssn: '1',
+      };
+    case 'maximum-length': {
+      const longText = 'A'.repeat(50);
+      return {
+        ...base,
+        firstName: longText,
+        lastName: longText,
+        address: 'B'.repeat(80),
+        city: longText,
+        state: 'Karnataka',
+        zipCode: '999999999',
+        phoneNumber: '9'.repeat(15),
+        ssn: '9'.repeat(11),
+      };
+    }
+    case 'special-characters':
+      return {
+        ...base,
+        firstName: 'Mary-Jane',
+        lastName: "O'Brien-D'Souza",
+        address: '12/A, St. Anne Road #4',
+        city: 'Saint-Denis',
+      };
+  }
 }

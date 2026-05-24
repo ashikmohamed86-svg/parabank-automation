@@ -31,7 +31,9 @@ export class RegistrationPage extends BasePage {
   readonly validationErrors: Locator;
   readonly firstNameError: Locator;
   readonly lastNameError: Locator;
+  readonly addressError: Locator;
   readonly usernameError: Locator;
+  readonly passwordMismatchError: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -53,7 +55,9 @@ export class RegistrationPage extends BasePage {
     this.validationErrors = page.locator('span.error');
     this.firstNameError = page.locator('[id="customer.firstName.errors"]');
     this.lastNameError = page.locator('[id="customer.lastName.errors"]');
+    this.addressError = page.locator('[id="customer.address.street.errors"]');
     this.usernameError = page.locator('[id="customer.username.errors"]');
+    this.passwordMismatchError = page.locator('[id="repeatedPassword.errors"]');
   }
 
   /** Opens the ParaBank registration page. */
