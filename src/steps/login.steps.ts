@@ -69,3 +69,11 @@ Then('a login error message is displayed', async ({ homePage }) => {
   await expect(homePage.loginError).toBeVisible();
   await expect(homePage.loginError).toContainText('could not be verified');
 });
+
+When('the customer logs out', async ({ accountOverviewPage }) => {
+  await accountOverviewPage.logout();
+});
+
+Then('the Customer Login page is displayed', async ({ homePage }) => {
+  await expect(homePage.customerLoginHeading).toBeVisible();
+});
