@@ -12,6 +12,10 @@
     "test:registration": "bddgen && playwright test --grep @registration",
     "test:login": "bddgen && playwright test --grep @login",
     "test:smoke": "bddgen && playwright test --grep @smoke",
+    "test:boundary": "bddgen && playwright test --grep @boundary",
+    "test:security": "bddgen && playwright test --grep @security",
+    "test:access": "bddgen && playwright test --grep @access",
+    "test:performance": "bddgen && playwright test --grep @performance",
     "report": "playwright show-report",
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf .features-gen playwright-report test-results blob-report"
