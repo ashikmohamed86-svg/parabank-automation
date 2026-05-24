@@ -37,26 +37,36 @@ and implemented with the **Page Object Model**.
 
 ```
 parabank-automation/
-├── features/                       # BDD — Gherkin feature files
-│   ├── account-registration.feature
-│   └── account-login.feature
+├── features/                        # BDD — Gherkin feature files
+│   ├── account-registration.feature # Functional — registration
+│   ├── account-login.feature        # Functional — login & balance
+│   ├── boundary.feature             # Boundary & input validation
+│   ├── security.feature             # Security testing
+│   ├── access-control.feature       # Session & access control
+│   └── performance.feature          # Response-time performance
 ├── src/
-│   ├── pages/                      # POM — one class per page
+│   ├── pages/                       # POM — one class per page
 │   │   ├── BasePage.ts
 │   │   ├── HomePage.ts
 │   │   ├── RegistrationPage.ts
-│   │   └── AccountOverviewPage.ts
-│   ├── steps/                      # BDD — Gherkin step definitions
+│   │   ├── AccountOverviewPage.ts
+│   │   └── RestrictedAreaPage.ts
+│   ├── steps/                       # BDD — Gherkin step definitions
 │   │   ├── registration.steps.ts
-│   │   └── login.steps.ts
-│   └── support/                    # Fixtures & utilities
-│       ├── fixtures.ts             # Wires Page Objects into BDD steps
-│       ├── customer-factory.ts     # Generates unique test data
-│       └── logger.ts               # Logs the post-login balance
+│   │   ├── login.steps.ts
+│   │   ├── boundary.steps.ts
+│   │   ├── security.steps.ts
+│   │   ├── access-control.steps.ts
+│   │   └── performance.steps.ts
+│   └── support/                     # Fixtures & utilities
+│       ├── fixtures.ts              # Wires Page Objects into BDD steps
+│       ├── customer-factory.ts      # Generates unique / boundary test data
+│       ├── performance.ts           # Timing helper & response-time budgets
+│       └── logger.ts                # Balance, performance & security logs
 ├── test-cases/
-│   └── ParaBank_Test_Cases.xlsx    # Documented test cases
-├── evidence/                       # Proof-of-execution artifacts
-├── .github/workflows/playwright.yml# CI pipeline
+│   └── ParaBank_Test_Cases.xlsx     # 33 documented test cases (5 sheets)
+├── evidence/                        # Proof-of-execution artifacts
+├── .github/workflows/playwright.yml # CI pipeline
 ├── playwright.config.ts
 ├── package.json
 └── tsconfig.json
@@ -78,13 +88,17 @@ npx playwright install chromium   # download the Chromium browser
 ## Running the tests
 
 ```bash
-npm test                 # run the full BDD suite (headless)
-npm run test:headed      # run with a visible browser
-npm run test:smoke       # run only @smoke scenarios
-npm run test:registration# run only registration scenarios
-npm run test:login       # run only login scenarios
-npm run report           # open the HTML report from the last run
-npm run typecheck        # TypeScript type-check, no test run
+npm test                  # run the full BDD suite (33 scenarios, headless)
+npm run test:headed        # run with a visible browser
+npm run test:smoke         # run only @smoke scenarios
+npm run test:registration  # functional registration scenarios
+npm run test:login         # functional login scenarios
+npm run test:boundary      # boundary & input-validation scenarios
+npm run test:security      # security scenarios
+npm run test:access        # session & access-control scenarios
+npm run test:performance   # performance scenarios
+npm run report             # open the HTML report from the last run
+npm run typecheck          # TypeScript type-check, no test run
 ```
 
 `npm test` runs `bddgen` (compiles the `.feature` files into runnable specs)
@@ -123,17 +137,30 @@ This keeps the three layers cleanly separated: **what** to test (features),
 
 ---
 
-## Test scenarios
+## Test coverage
 
-| ID | Scenario | Type | Feature file |
-|----|----------|------|--------------|
-| TC-01 | Register a new customer with valid details | Positive | account-registration.feature |
-| TC-02 | Registration rejected when mandatory fields are empty | Negative | account-registration.feature |
-| TC-03 | Registration rejected for an already registered username | Negative | account-registration.feature |
-| TC-04 | Sign in with a new account and view the post-login balance | Positive | account-login.feature |
-| TC-05 | Sign in rejected with invalid credentials | Negative | account-login.feature |
+The suite contains **33 automated scenarios** across five test types:
 
-Full details are documented in [`test-cases/ParaBank_Test_Cases.xlsx`](test-cases/ParaBank_Test_Cases.xlsx).
+| Test type | Count | What it covers |
+|-----------|-------|----------------|
+| Functional | 6 | Core registration, login and the post-login balance |
+| Boundary & validation | 8 | Password mismatch, partial forms, min/max length, special characters, missing credentials |
+| Security | 9 | Input masking, SQL/HTML injection, HTTPS, HttpOnly cookie, user enumeration, brute-force |
+| Access control | 5 | Protected pages blocked when logged out / after logout, session persistence |
+| Performance | 5 | Page-load and action response times against soft budgets |
+
+Every scenario is documented as a test case in
+[`test-cases/ParaBank_Test_Cases.xlsx`](test-cases/ParaBank_Test_Cases.xlsx) — a
+five-sheet workbook (Test Cases, Summary Report, Automation Mapping, Dashboard,
+Guidelines).
+
+### Security finding
+
+The security scenario for HTML injection (TC-019) asserts the *secure*
+expectation — injected markup should be neutralised. ParaBank renders the
+registration first name **unescaped**, a genuine stored-XSS / HTML-injection
+exposure. The scenario is tagged `@fail` (expected failure) so the regression
+suite stays green while clearly flagging the defect.
 
 ---
 
