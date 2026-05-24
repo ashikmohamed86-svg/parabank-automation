@@ -220,11 +220,13 @@ See [`evidence/README.md`](evidence/README.md) for the proof-of-execution guide.
 
 | Variable | Default | Purpose |
 |----------|---------|---------|
-| `BASE_URL` | `https://parabank.parasoft.com/parabank` | Application base URL |
-| `CI` | _unset_ | When set, enables 1 retry and `forbidOnly` |
+| `BASE_URL` | `https://parabank.parasoft.com/parabank/` | Application base URL |
+| `WORKERS` | `1` (serial) | Parallel worker count — e.g. `WORKERS=4` runs the suite in parallel |
+| `CI` | _unset_ | When set, enables retries and `forbidOnly` |
 
 ```bash
-BASE_URL=https://my-parabank-host/parabank npm test
+BASE_URL=https://my-parabank-host/parabank/ npm test
+WORKERS=4 npm test          # run in parallel to cut the full-suite run time
 ```
 
 ---
@@ -254,8 +256,9 @@ git push -u origin main
 
 ## Notes
 
-- ParaBank is a shared public demo site, so the suite runs **serially** with a
-  single worker for stable, isolated state.
+- ParaBank is a shared public demo that returns 5xx errors under concurrent
+  load, so the suite runs **serially by default**. For a private or dedicated
+  ParaBank host, `WORKERS=4 npm test` runs it **in parallel** to cut the run time.
 - Each run **generates a unique username**, so the suite is fully repeatable.
 - ParaBank assigns a fresh account number and opening balance to every new
   registration — the suite reads and logs whatever balance is displayed rather
