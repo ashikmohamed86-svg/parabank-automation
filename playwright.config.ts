@@ -28,11 +28,15 @@ export default defineConfig({
     'Browsers': 'Chromium (Desktop Chrome viewport)',
     'For non-technical readers': 'Open REPORT-SUMMARY.md alongside this report for a 30-second plain-English overview.',
   },
-  // ParaBank is a shared public demo environment - run serially for stable, isolated state.
-  fullyParallel: false,
-  workers: 1,
+  // The ParaBank demo is a single shared environment that returns 5xx under
+  // concurrent registrations/logins, so the suite runs serially.
+  // Increase WORKERS via env var when pointing at a private/dedicated host:
+  //   WORKERS=4 npm test
+  fullyParallel: !!process.env.WORKERS,
+  workers: process.env.WORKERS ? Number(process.env.WORKERS) : 1,
   forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 1 : 0,
+  // Retry transient ParaBank 5xx hiccups locally and on CI.
+  retries: process.env.CI ? 2 : 1,
   timeout: 90_000,
   expect: { timeout: 15_000 },
   reporter: [

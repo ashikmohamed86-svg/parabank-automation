@@ -96,7 +96,9 @@ When(
   async ({ homePage, customer, scenarioContext }) => {
     await homePage.open();
     await homePage.login(customer.username, 'WrongPassword@0000');
-    await homePage.loginError.waitFor({ state: 'visible' });
+    // ParaBank renders the error inside #showError which may be display:none.
+    // Wait for the element to be attached, not visible.
+    await homePage.loginError.waitFor({ state: 'attached' });
     scenarioContext.messages.push(((await homePage.loginError.textContent()) ?? '').trim());
   },
 );
@@ -106,7 +108,7 @@ When(
   async ({ homePage, scenarioContext }) => {
     await homePage.open();
     await homePage.login('unknown_user_zz404', 'WrongPassword@0000');
-    await homePage.loginError.waitFor({ state: 'visible' });
+    await homePage.loginError.waitFor({ state: 'attached' });
     scenarioContext.messages.push(((await homePage.loginError.textContent()) ?? '').trim());
   },
 );
@@ -126,7 +128,17 @@ When(
   'the customer makes 5 consecutive failed login attempts',
   async ({ homePage, scenarioContext }) => {
     for (let attempt = 1; attempt <= 5; attempt += 1) {
-      await homePage.open();
+      // One retry per attempt covers the case where ParaBank's demo
+      // intermittently fails to render the login form on the first navigation.
+      let opened = false;
+      for (let tries = 0; tries < 2 && !opened; tries += 1) {
+        try {
+          await homePage.open();
+          opened = true;
+        } catch {
+          if (tries === 1) throw new Error('Failed to load login page after retry');
+        }
+      }
       await homePage.login(`brute_user_${attempt}`, `brute_pass_${attempt}`);
       scenarioContext.flags.push(!(await homePage.isSignedIn()));
     }

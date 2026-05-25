@@ -61,8 +61,13 @@ interface ApiCall {
   responseTruncated?: boolean;
 }
 
-/** Resource types we capture full request/response bodies for. Static assets are skipped. */
-const CAPTURE_BODY_TYPES = new Set(['document', 'xhr', 'fetch']);
+/**
+ * Resource types we capture full request/response bodies for. ParaBank's
+ * meaningful traffic (page loads, register/login form POSTs, the overview
+ * fetch) all flow through `document` requests, so this is enough and keeps
+ * the per-test overhead tiny.
+ */
+const CAPTURE_BODY_TYPES = new Set(['document']);
 const MAX_BODY_BYTES = 4096;
 
 /** Redact known sensitive values from any captured string. */
@@ -183,7 +188,7 @@ export const test = base.extend<TestFixtures>({
       }
       calls.push(call);
     };
-    const onResponse = async (res: Response) => {
+    const onResponse = (res: Response) => {
       const req = res.request();
       const start = startTimes.get(req);
       const call = [...calls].reverse().find(c => c.url === req.url() && c.method === req.method() && c.status === undefined);
@@ -192,15 +197,16 @@ export const test = base.extend<TestFixtures>({
       call.statusText = res.statusText();
       if (start !== undefined) call.durationMs = Date.now() - start;
       if (CAPTURE_BODY_TYPES.has(req.resourceType())) {
-        try {
-          call.responseHeaders = redactHeaders(res.headers());
-          const text = await res.text();
+        call.responseHeaders = redactHeaders(res.headers());
+        // Fire-and-forget body read so the response handler returns immediately
+        // and never blocks subsequent page actions.
+        res.text().then(text => {
           const { value, truncated } = truncate(redact(text));
           call.responseBody = value;
           if (truncated) call.responseTruncated = true;
-        } catch {
-          // response body unavailable (e.g. navigation aborted) - ignore
-        }
+        }).catch(() => {
+          // body unavailable (e.g. navigation aborted) - leave it unset
+        });
       }
     };
     const onRequestFailed = (req: Request) => {

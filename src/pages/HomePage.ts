@@ -27,10 +27,15 @@ export class HomePage extends BasePage {
     this.loginError = page.locator('#rightPanel p.error');
   }
 
-  /** Opens the ParaBank home page. */
+  /**
+   * Opens the ParaBank home page. Waits for the username input to be
+   * interactable rather than the "Customer Login" heading, because the demo
+   * sometimes renders the page without that heading visible while the form
+   * itself is fully usable.
+   */
   async open(): Promise<void> {
     await this.goto(this.path);
-    await this.customerLoginHeading.waitFor({ state: 'visible' });
+    await this.usernameInput.waitFor({ state: 'visible' });
   }
 
   /** Navigates from the home page to the registration page. */
