@@ -30,6 +30,10 @@ Thumbs.db
 
 # LibreOffice / Office lock files
 .~lock.*#
+*.tmp
+
+# Locally-exported presentation artifacts (PDFs / video re-renders / etc.)
+presentation/*.pdf
 
 # Environment
 .env

@@ -36,7 +36,8 @@ export default defineConfig({
   workers: process.env.WORKERS ? Number(process.env.WORKERS) : 1,
   forbidOnly: !!process.env.CI,
   // Retry transient ParaBank 5xx hiccups locally and on CI.
-  retries: process.env.CI ? 2 : 1,
+  // Bumped to 2 locally to absorb the higher 5xx rate when running in parallel.
+  retries: 2,
   timeout: 90_000,
   expect: { timeout: 15_000 },
   reporter: [
